@@ -8,6 +8,45 @@ import Round from './Round.js';
 
 
 
+
+
+var allTeams = [
+
+/////EACH ONE OF THE CURLY BRACKETS IS 1 TEAM
+
+{
+  id: 1,
+  teamName: 'buttheads',
+  group: 'F',
+  shortName: 'BTH',
+  image: null
+},
+{
+  id: 2,
+  teamName: 'buttheads2',
+  group: 'F',
+  shortName: 'BTH',
+  image: null
+},
+{
+  id: 3,
+  teamName: 'buttheads3',
+  group: 'F',
+  shortName: 'BTH',
+  image: null
+},
+
+{
+  etc......
+}
+
+
+]
+
+
+
+
+
 // allTeams = [{
 //   id: 1,
 //   name: 'The Bayern Buttheads',
@@ -43,6 +82,7 @@ class App extends React.Component() {
 componentDidMount = () => {
 
   let byeLosers
+
 
 
 
@@ -108,6 +148,16 @@ byeLosers = this.state.roster.slice();
 
 byeLosers.sortBy(function(p) { return [p.group, p.wins, p.differential]})
 
+for (let i = 0; i < 8; i++) {
+
+byeLosers.splice(i++, 2);
+
+}
+
+this.setState({
+  roster: byeLosers
+})
+
 }, 16)
 
 
@@ -126,6 +176,17 @@ setTimeout(function() {
 byeLosers = this.state.roster.slice();
 
 byeLosers.sortBy(function(p) { return [p.group, p.wins, p.differential]})
+
+
+for (let i = 0; i < 8; i++) {
+
+  byeLosers.splice(i++, 2);
+  
+  }
+  
+  this.setState({
+    roster: byeLosers
+  })
 
 }, 16)
 
@@ -147,14 +208,14 @@ setTimeout(function() {
 
 setTimeout(function() {
 
-  this.semiFinalCountdown()
+  this.quarterFinalCountdown()
 
 }, 16)
 
 
 setTimeout(function() {
 
-  this.finalCountdown()
+  this.quarterFinalCountdown()
 
 }, 16)
 
@@ -166,6 +227,48 @@ setTimeout(function() {
 
 
 
+
+
+}
+
+quarterFinalCountdown = () => {
+
+
+  let currentRoster = this.state.roster.spice();
+
+  let currentPast = this.state.pairings.splice()
+  
+  let thisGroupPairings = []
+  
+  currentRoster.sortBy(function(p) {  return [p.group]})
+  
+  
+  while (currentRoster.length > 0) {
+  
+  
+    let thisPairing = []
+  
+    thisPairing.push(currentRoster[0], currentRoster[1])
+  
+  
+    currentRoster.shift();
+    currentRoster.shift();
+  
+    thisGroupPairings.push(thisPairing);
+  
+  
+  
+  }
+  
+  currentPast.push(thisGroupPairings)
+  
+  this.setState({
+    round: this.state.round+1,
+    parings: thisGroupPairings,
+    allPairings: currentPast,
+    roster: []
+  })
+  
 
 
 }
@@ -202,6 +305,53 @@ calculateResults = (team1, team2) => {
   this.setState(
     {round: this.state.round+1,
     allStandings: theseResults,
+  }
+  )
+
+  return [team1, team2]
+
+
+}
+
+
+
+calculateResultsSingle = (team1, team2) => {
+
+
+  let team1Goals = Math.floor(Math.random() * 5)
+
+  let team2Goals = Math.floor(Math.random() * 5)
+
+
+  if (team2Goals === team1Goals) {
+    let tiebreak = Math.floor(Math.random() * 2)
+
+      if (tiebreak > 0) team1Goals +=1 
+      else team2Goals +=1
+
+  }
+
+  team1.goals(team1Goals);
+  team1.goalsAgainst(team2Goals);
+  team2.goals(team2Goals);
+  team2.goalsAgainst(team1Goals);
+
+  let theseResults = this.state.allStandings.splice()
+
+  let byeLosers = this.state.roster
+
+
+  team1.goals > team2.goals ?   theseResults.push(Result(team1, team2, this.state.round)) :     theseResults.push(Result(team2, team1, this.state.round)) 
+
+
+
+  team1.goals > team2.goals ? byeLosers.push(team1) : byeLosers.push(team2)
+
+
+  this.setState(
+    {round: this.state.round+1,
+    allStandings: theseResults,
+    roster: byeLosers
   }
   )
 

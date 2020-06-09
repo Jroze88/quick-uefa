@@ -74,7 +74,7 @@ class Guy extends React.Component() {
       </tr> 
     <tr class="tournament-bracket__team tournament-bracket__team--winner">
         <td class="tournament-bracket__country">
-          <abbr class="tournament-bracket__code" title="Czech Republic">{props.guy.teamName}</abbr>
+          <abbr class="tournament-bracket__code" title={`${props.guy.teamName}`}>{props.guy.teamName}</abbr>
           <span class="tournament-bracket__flag flag-icon flag-icon-cz" aria-label="Flag"><img src={teamLogo} /></span>
         </td>
         <td class="tournament-bracket__score">
